@@ -1,0 +1,11 @@
+streamlit==1.64.0
+pandas==2.3.3
+numpy==2.5.3
+plotly==7.1.0
+joblib==1.6.0
+tabpfn-client==0.6.0
+earthengine-api==1.7.45
+SQLAlchemy==2.1.1
+psycopg[binary]==3.3.6
+reportlab==5.0.1
+python-dotenv==1.2.3

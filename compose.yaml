@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+    image: padi-nowcasting:local
+    container_name: padi-nowcasting
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./.streamlit/secrets.toml:/app/.streamlit/secrets.toml:ro
+    restart: unless-stopped

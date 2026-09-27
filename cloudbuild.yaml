@@ -1,0 +1,49 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_IMAGE}", "."]
+  - name: gcr.io/cloud-builders/docker
+    args: ["push", "${_IMAGE}"]
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - padi-nowcasting
+      - "--image=${_IMAGE}"
+      - "--region=${_REGION}"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--port=8080"
+      - "--cpu=1"
+      - "--memory=1Gi"
+      - "--min-instances=0"
+      - "--max-instances=1"
+      - "--concurrency=10"
+      - "--timeout=300"
+      - "--service-account=${_SERVICE_ACCOUNT}"
+      - "--set-env-vars=GEE_PROJECT_ID=$PROJECT_ID,GEE_USE_ADC=true"
+      - "--set-secrets=TABPFN_TOKEN=${_TABPFN_SECRET}:latest,DATABASE_URL=${_DATABASE_SECRET}:latest"
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - jobs
+      - deploy
+      - padi-gee-sync
+      - "--image=${_IMAGE}"
+      - "--region=${_REGION}"
+      - "--service-account=${_SERVICE_ACCOUNT}"
+      - "--set-env-vars=GEE_PROJECT_ID=$PROJECT_ID,GEE_USE_ADC=true"
+      - "--set-secrets=DATABASE_URL=${_DATABASE_SECRET}:latest"
+      - "--command=python"
+      - "--args=-m,scripts.sync_latest"
+      - "--task-timeout=3600"
+      - "--max-retries=1"
+substitutions:
+  _IMAGE: asia-southeast2-docker.pkg.dev/$PROJECT_ID/padi/app:$SHORT_SHA
+  _REGION: asia-southeast2
+  _SERVICE_ACCOUNT: padi-casting-app@$PROJECT_ID.iam.gserviceaccount.com
+  _TABPFN_SECRET: padi-tabpfn-token
+  _DATABASE_SECRET: padi-database-url
+options:
+  logging: CLOUD_LOGGING_ONLY

@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Secrets
+.env
+.streamlit/secrets.toml
+*service-account*.json
+*.pem
+*.key
+
+# Local runtime
+.cache/
+.streamlit/cache/
+*.log
+*.db
+tmp/
+
+# Spatial source files (deployment only needs the sawah WGS84 files)
+data/spatial/**/sawah.geojson
+data/spatial/**/batas_administrasi*.geojson
+
+# OS and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

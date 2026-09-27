@@ -1,0 +1,27 @@
+{
+  "kabupaten": "Bojonegoro",
+  "tahun": 2024,
+  "bulan": 1,
+  "fitur_final_values": {
+    "NDVI_mean": 0.5707550097235948,
+    "EVI_mean": 0.3444354307762449,
+    "SAVI_mean": 0.3249555429335712,
+    "Bulan_sin": 0.49999999999999994,
+    "Bulan_cos": 0.8660254037844387,
+    "Kab_Jember": 0.0,
+    "Kab_Lamongan": 0.0,
+    "Kab_Ngawi": 0.0,
+    "Kab_Tuban": 0.0,
+    "NDVI_mean_delta1": 0.10789381053055302,
+    "SAVI_mean_delta1": 0.05605453726357529,
+    "NDVI_mean_lag2": 0.325294072102713,
+    "SAVI_mean_lag1": 0.2689010056699959,
+    "NDVI_mean_lag1": 0.4628611991930418,
+    "SAVI_mean_lag2": 0.1856975701174802,
+    "NDVI_mean_roll3": 0.4529700936731165,
+    "SAVI_mean_roll3": 0.2598513729070158,
+    "EVI_mean_delta1": 0.05936886235224159
+  },
+  "prediksi_notebook": 16904.18359375,
+  "aktual": 15837.66
+}

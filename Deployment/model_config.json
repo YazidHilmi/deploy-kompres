@@ -1,0 +1,68 @@
+{
+  "model_type": "TabPFN",
+  "best_params": {
+    "n_estimators": 8,
+    "softmax_temperature": 0.5064273867851536
+  },
+  "fitur_final": [
+    "NDVI_mean",
+    "EVI_mean",
+    "SAVI_mean",
+    "Bulan_sin",
+    "Bulan_cos",
+    "Kab_Jember",
+    "Kab_Lamongan",
+    "Kab_Ngawi",
+    "Kab_Tuban",
+    "NDVI_mean_delta1",
+    "SAVI_mean_delta1",
+    "NDVI_mean_lag2",
+    "SAVI_mean_lag1",
+    "NDVI_mean_lag1",
+    "SAVI_mean_lag2",
+    "NDVI_mean_roll3",
+    "SAVI_mean_roll3",
+    "EVI_mean_delta1"
+  ],
+  "kolom_kabupaten": [
+    "Kab_Jember",
+    "Kab_Lamongan",
+    "Kab_Ngawi",
+    "Kab_Tuban"
+  ],
+  "kabupaten_list": [
+    "Bojonegoro",
+    "Jember",
+    "Ngawi",
+    "Tuban",
+    "Lamongan"
+  ],
+  "fitur_index": [
+    "NDVI_mean",
+    "EVI_mean",
+    "SAVI_mean"
+  ],
+  "kolom_lag": [
+    "NDVI_mean_lag1",
+    "NDVI_mean_lag2",
+    "EVI_mean_lag1",
+    "EVI_mean_lag2",
+    "SAVI_mean_lag1",
+    "SAVI_mean_lag2"
+  ],
+  "kolom_delta": [
+    "NDVI_mean_delta1",
+    "EVI_mean_delta1",
+    "SAVI_mean_delta1"
+  ],
+  "kolom_roll": [
+    "NDVI_mean_roll3",
+    "EVI_mean_roll3",
+    "SAVI_mean_roll3"
+  ],
+  "kolom_trend": [
+    "NDVI_mean_trend",
+    "EVI_mean_trend",
+    "SAVI_mean_trend"
+  ]
+}
