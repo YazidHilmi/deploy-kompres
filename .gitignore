@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.pytest-runtime/
 .coverage
 htmlcov/
 .venv/
@@ -23,7 +24,7 @@ tmp/
 
 # Spatial source files (deployment only needs the sawah WGS84 files)
 data/spatial/**/sawah.geojson
-data/spatial/**/batas_administrasi*.geojson
+data/spatial/**/batas_administrasi.geojson
 
 # OS and editors
 .DS_Store

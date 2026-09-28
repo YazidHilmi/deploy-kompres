@@ -10,6 +10,7 @@ from src.database import create_database_engine, database_counts, initialize_dat
 from src.gee_client import find_spatial_file, initialize_earth_engine
 from src.schemas import SUPPORTED_REGIONS
 from src.sync_service import build_sync_plan, sync_one
+from src.ui import apply_theme, page_header
 
 
 def get_secret(name):
@@ -28,8 +29,12 @@ def get_engine(database_url):
     return engine
 
 
-st.title("Status Sistem")
-st.caption("Pemeriksaan konfigurasi runtime tanpa menampilkan isi credential.")
+apply_theme()
+page_header(
+    "Status dan pembaruan data",
+    "Periksa ketersediaan data setiap wilayah dan perbarui observasi Sentinel-2 dari Google Earth Engine.",
+    "Pengelolaan Data",
+)
 
 engine = get_engine(get_secret("DATABASE_URL"))
 counts = database_counts(engine)
@@ -47,7 +52,7 @@ col2.metric("Prediksi tersimpan", counts["prediction_results"])
 col3.metric("TabPFN token", "Siap" if tabpfn_ready else "Belum diisi")
 col4.metric("GEE project", "Siap" if gee_project else "Belum diisi")
 
-st.subheader("Data spasial")
+st.subheader("Cakupan wilayah")
 spatial_rows = []
 for item in SUPPORTED_REGIONS:
     try:
@@ -57,7 +62,7 @@ for item in SUPPORTED_REGIONS:
         spatial_rows.append({"Kabupaten": item, "Status": "Belum ada", "File": "-"})
 st.dataframe(pd.DataFrame(spatial_rows), width="stretch", hide_index=True)
 
-st.subheader("Sinkronisasi Google Earth Engine")
+st.subheader("Perbarui data satelit")
 st.write(
     "Ambil citra Sentinel-2 untuk satu atau beberapa kabupaten dan rentang bulan, hitung "
     "NDVI/EVI/SAVI di area sawah, lalu simpan hasilnya ke database."
@@ -76,7 +81,7 @@ except ValueError as error:
     plan = []
     st.error(str(error))
 
-if st.button("Sinkronkan rentang dari GEE", type="primary", width="stretch", disabled=not plan):
+if st.button("Perbarui data satelit", type="primary", width="stretch", disabled=not plan):
     if not gee_project:
         st.error("GEE_PROJECT_ID belum diisi pada secrets atau environment variable.")
     elif not gee_credential_ready:

@@ -9,14 +9,34 @@ Dokumen implementasi utama:
 
 ## Fitur yang sudah tersedia
 
-- prediksi produksi untuk satu kabupaten dan bulan dengan TabPFN Client;
+- dashboard prediksi tersimpan dan tren vegetasi Sentinel-2;
+- prediksi produksi untuk satu kabupaten dan periode dengan TabPFN Client;
+- analisis beberapa kabupaten atau beberapa periode dalam satu proses;
+- peta prediksi produksi, NDVI, EVI, dan SAVI;
 - pembentukan 18 fitur yang sama dengan notebook;
-- riwayat permanen dan laporan PDF;
+- riwayat permanen, grafik perkembangan, dan laporan PDF ramah pengguna;
 - SQLite untuk pengembangan lokal dan PostgreSQL melalui `DATABASE_URL` untuk hosting;
 - sinkronisasi Sentinel-2 dari Google Earth Engine;
 - cloud masking SCL serta perhitungan NDVI, EVI, dan SAVI;
+- navigasi dan sistem desain Streamlit yang konsisten;
 - deployment Streamlit Community Cloud;
 - image Docker dan konfigurasi Google Cloud Run sebagai opsi lanjutan.
+
+## Struktur aplikasi
+
+```text
+Dashboard
+├── Prediksi Produksi
+├── Analisis & Perbandingan
+├── Peta Produksi
+├── Riwayat & Laporan
+├── Tentang Platform
+└── Status Data
+```
+
+`app.py` menjadi entry point dan mengatur navigasi resmi Streamlit. Logika tampilan
+bersama berada di `src/ui.py`, sedangkan akses data dan model bersama berada di
+`src/app_services.py`.
 
 ## Menjalankan secara lokal
 
