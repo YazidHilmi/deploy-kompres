@@ -82,9 +82,129 @@ Pengguna menerima hasil prediksi dan konteks vegetasi
 Hasil disimpan, dibandingkan, atau dibuat menjadi laporan PDF
 ```
 
-## 6. Struktur Halaman Target
+## 6. Standar Desain Antarmuka
 
-### 6.1 Dashboard
+Antarmuka Streamlit harus dirancang menyerupai produk web yang matang, bukan tampilan
+default notebook atau kumpulan widget. Desain tetap ringan agar cepat dimuat pada
+Streamlit Community Cloud.
+
+### 6.1 Arah visual
+
+- tampilan bersih, modern, dan profesional;
+- nuansa pertanian melalui hijau yang tenang, bukan warna hijau berlebihan;
+- latar netral dengan kontras teks yang jelas;
+- ruang kosong yang cukup agar halaman tidak terasa padat;
+- sudut kartu, garis batas, dan bayangan digunakan secara konsisten;
+- tidak menggunakan dekorasi yang tidak membantu pengguna memahami informasi.
+
+### 6.2 Palet warna
+
+Palet awal:
+
+| Fungsi | Warna |
+|---|---|
+| Warna utama | hijau tua `#1F6B45` |
+| Warna aksen | hijau sedang `#3D8B5F` |
+| Latar utama | putih atau abu sangat muda |
+| Latar kartu | putih |
+| Teks utama | abu gelap `#17211B` |
+| Teks sekunder | abu netral |
+| Informasi | biru tenang |
+| Peringatan | kuning kecokelatan |
+| Kesalahan | merah yang tidak terlalu terang |
+
+Warna status harus memiliki label teks dan tidak hanya bergantung pada warna.
+
+### 6.3 Tipografi
+
+- gunakan satu keluarga font sans-serif yang mudah dibaca;
+- judul halaman harus ringkas dan konsisten;
+- angka prediksi utama dibuat paling menonjol;
+- hindari paragraf panjang pada halaman operasional;
+- gunakan ukuran dan ketebalan font untuk membentuk hierarki, bukan emoji.
+
+### 6.4 Penggunaan ikon dan emoji
+
+- emoji tidak digunakan pada setiap judul, tombol, metrik, atau pesan;
+- maksimal satu ikon yang relevan pada elemen navigasi atau empty state bila diperlukan;
+- gunakan ikon sederhana dan konsisten untuk aksi seperti unduh, filter, perbarui, dan laporan;
+- jangan menggunakan emoji sebagai pengganti label yang jelas;
+- halaman dan laporan resmi tidak memakai dekorasi emoji.
+
+### 6.5 Layout halaman
+
+- gunakan lebar halaman secara terkontrol agar konten tidak terlalu melebar;
+- bagian atas halaman berisi judul, deskripsi singkat, dan aksi utama;
+- metrik penting ditampilkan sebagai kartu yang seragam;
+- filter dikelompokkan dalam panel atau sidebar;
+- grafik ditempatkan setelah ringkasan utama;
+- tabel panjang berada di bagian bawah atau di dalam tab;
+- detail tambahan ditempatkan dalam expander agar tidak memenuhi halaman;
+- hindari deretan komponen tanpa pemisah dan konteks.
+
+### 6.6 Navigasi
+
+- nama menu menggunakan bahasa pengguna dan tidak menggunakan nama file;
+- urutan menu mengikuti alur kerja: Dashboard, Prediksi, Analisis, Peta, Riwayat, Tentang;
+- halaman aktif harus mudah dikenali;
+- aksi utama **Buat Prediksi** tersedia dari dashboard;
+- halaman teknis tidak ditempatkan sebagai fokus navigasi utama.
+
+### 6.7 Komponen visual
+
+Komponen yang perlu dibuat konsisten:
+
+- kartu metrik;
+- kartu hasil prediksi;
+- panel filter;
+- tombol utama dan sekunder;
+- status badge;
+- empty state ketika data belum tersedia;
+- loading state saat GEE atau model sedang berjalan;
+- notifikasi sukses dan gagal;
+- tabel dengan format angka Indonesia;
+- tooltip dan caption grafik;
+- header dan footer aplikasi.
+
+CSS kustom diperbolehkan untuk memperbaiki tampilan Streamlit, tetapi selector harus
+dibatasi dan tidak bergantung pada class internal Streamlit yang mudah berubah.
+
+### 6.8 Grafik dan peta
+
+- gunakan palet yang konsisten pada seluruh halaman;
+- judul dan label sumbu harus dapat dipahami tanpa penjelasan teknis;
+- format ton dan angka desimal mengikuti format Indonesia;
+- tooltip memuat wilayah, periode, dan nilai;
+- jumlah warna dan seri dibatasi agar grafik mudah dibaca;
+- grafik harus tetap terbaca pada laptop presentasi;
+- peta memiliki legenda yang jelas dan tidak dipenuhi kontrol yang tidak diperlukan.
+
+### 6.9 Responsivitas dan aksesibilitas
+
+- tampilan utama harus nyaman pada layar laptop dan tetap dapat digunakan pada ponsel;
+- tombol memiliki label yang jelas;
+- teks memiliki kontras yang cukup;
+- informasi tidak hanya dibedakan berdasarkan warna;
+- tabel dan grafik memiliki penjelasan singkat;
+- status proses menggunakan teks yang dapat dipahami pengguna;
+- animasi, jika digunakan, harus ringan dan tidak mengganggu demonstrasi.
+
+### 6.10 Hal yang harus dihindari
+
+- tampilan default Streamlit tanpa penataan;
+- emoji berlebihan;
+- warna mencolok pada seluruh halaman;
+- terlalu banyak kotak informasi;
+- istilah notebook dan nama variabel pada UI;
+- data mentah yang langsung ditumpahkan ke halaman;
+- sidebar penuh dengan kontrol teknis;
+- paragraf metodologi di halaman prediksi;
+- grafik tanpa judul, satuan, legenda, dan konteks;
+- perubahan tema yang berbeda-beda antarhalaman.
+
+## 7. Struktur Halaman Target
+
+### 7.1 Dashboard
 
 Dashboard menjadi halaman pembuka dan memberikan gambaran kondisi seluruh wilayah.
 
@@ -99,7 +219,7 @@ Komponen:
 - status kelengkapan data;
 - tombol **Buat Prediksi**.
 
-### 6.2 Prediksi Produksi
+### 7.2 Prediksi Produksi
 
 Fitur inti yang sudah berjalan dipertahankan dan antarmukanya disederhanakan.
 
@@ -115,7 +235,7 @@ Alur:
 
 Informasi internal model tidak ditampilkan pada hasil utama.
 
-### 6.3 Analisis dan Perbandingan
+### 7.3 Analisis dan Perbandingan
 
 Halaman ini mengubah hasil prediksi menjadi bahan analisis pengguna.
 
@@ -130,7 +250,7 @@ Fitur:
 - perbandingan dengan periode sebelumnya;
 - ringkasan wilayah dengan hasil tertinggi dan terendah.
 
-### 6.4 Peta Produksi
+### 7.4 Peta Produksi
 
 Peta menampilkan cakupan lima kabupaten dan membantu pengguna memahami sebaran hasil.
 
@@ -142,7 +262,7 @@ Fitur:
 - filter periode;
 - klik wilayah untuk membuka detail.
 
-### 6.5 Riwayat dan Laporan
+### 7.5 Riwayat dan Laporan
 
 Fitur:
 
@@ -155,7 +275,7 @@ Fitur:
 - membuat laporan gabungan beberapa wilayah atau periode;
 - mengunduh ulang PDF.
 
-### 6.6 Status Data
+### 7.6 Status Data
 
 Halaman pendukung untuk memperbarui dan memeriksa data tanpa menampilkan kerumitan GEE.
 
@@ -171,7 +291,7 @@ Fitur:
 Nama koleksi, detail autentikasi, dan log teknis tidak perlu ditampilkan kepada pengguna
 umum.
 
-### 6.7 Tentang Platform
+### 7.7 Tentang Platform
 
 Halaman ini menggabungkan informasi metodologi dan validasi sebagai materi pendukung.
 
@@ -186,7 +306,7 @@ Isi:
 - teknologi dan sumber pihak ketiga;
 - kontribusi tim.
 
-## 7. Desain Hasil Prediksi
+## 8. Desain Hasil Prediksi
 
 Hasil satu prediksi harus menampilkan:
 
@@ -209,14 +329,14 @@ Hasil tidak menampilkan:
 - fitur `lag`, `delta`, `roll`, encoding kabupaten, sinus, atau cosinus;
 - waktu inferensi sebagai informasi utama.
 
-## 8. Desain Ulang Laporan PDF
+## 9. Desain Ulang Laporan PDF
 
-### 8.1 Tujuan laporan
+### 9.1 Tujuan laporan
 
 PDF harus menjadi ringkasan yang dapat dibaca dan dibagikan oleh pengguna, bukan dump
 input model.
 
-### 8.2 Struktur laporan satu prediksi
+### 9.2 Struktur laporan satu prediksi
 
 #### Header
 
@@ -263,7 +383,7 @@ padi historis. Hasil digunakan sebagai informasi pendukung pemantauan produksi.
 - nomor halaman;
 - waktu pembuatan laporan.
 
-### 8.3 Informasi yang dihapus dari PDF pengguna
+### 9.3 Informasi yang dihapus dari PDF pengguna
 
 - ID hasil atau UUID;
 - nama internal model;
@@ -275,7 +395,7 @@ padi historis. Hasil digunakan sebagai informasi pendukung pemantauan produksi.
 
 Informasi tersebut tetap dapat disimpan untuk audit sistem.
 
-### 8.4 Laporan gabungan
+### 9.4 Laporan gabungan
 
 Laporan gabungan mendukung:
 
@@ -286,7 +406,7 @@ Laporan gabungan mendukung:
 - grafik indeks vegetasi;
 - ringkasan prediksi tertinggi dan terendah.
 
-## 9. Data dan Infrastruktur
+## 10. Data dan Infrastruktur
 
 ### Komponen utama
 
@@ -308,7 +428,7 @@ Laporan gabungan mendukung:
 - versi model untuk audit;
 - data yang diperlukan untuk membuat ulang laporan.
 
-## 10. Tahapan Implementasi
+## 11. Tahapan Implementasi
 
 ### Fase 1 — Menjadikan aplikasi berorientasi pengguna
 
@@ -350,7 +470,7 @@ Laporan gabungan mendukung:
 - rekam video demonstrasi cadangan;
 - siapkan skenario demo maksimal 15 menit.
 
-## 11. Prioritas
+## 12. Prioritas
 
 ### Wajib sebelum demonstrasi
 
@@ -379,7 +499,7 @@ Laporan gabungan mendukung:
 - notifikasi pembaruan data;
 - API untuk integrasi sistem pemerintah.
 
-## 12. Kriteria Selesai
+## 13. Kriteria Selesai
 
 Pengembangan dianggap berhasil ketika:
 
@@ -395,7 +515,7 @@ Pengembangan dianggap berhasil ketika:
 10. teknologi, dataset, API, model, dan kontribusi AI generatif dicantumkan dalam
     proposal.
 
-## 13. Skenario Demonstrasi
+## 14. Skenario Demonstrasi
 
 1. Buka dashboard dan tunjukkan ringkasan lima kabupaten.
 2. Pilih satu kabupaten dan periode.
