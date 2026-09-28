@@ -215,9 +215,29 @@ Komponen:
 - total atau ringkasan prediksi pada periode terpilih;
 - perubahan terhadap periode sebelumnya;
 - grafik tren produksi;
+- panel **Tren Vegetasi** berdasarkan observasi Sentinel-2;
 - kabupaten dengan prediksi tertinggi dan terendah;
 - status kelengkapan data;
 - tombol **Buat Prediksi**.
+
+#### Tren Vegetasi
+
+Panel ini mendukung fungsi pemantauan dan tidak diposisikan sebagai keluaran prediksi.
+
+Komponen:
+
+- pilihan kabupaten;
+- pilihan rentang 3, 6, atau 12 bulan;
+- grafik garis NDVI, EVI, dan SAVI;
+- nilai observasi terbaru untuk setiap indeks;
+- perubahan nilai dari observasi bulan sebelumnya;
+- periode citra terakhir yang tersedia;
+- label **Data observasi Sentinel-2**.
+
+Bahasa antarmuka menggunakan istilah **nilai indeks terbaru**, **data vegetasi
+teramati**, dan **perubahan dari bulan sebelumnya**. Antarmuka tidak menggunakan
+istilah prediksi NDVI, prediksi EVI, atau prediksi SAVI karena ketiga indeks tersebut
+merupakan input hasil observasi citra satelit.
 
 ### 7.2 Prediksi Produksi
 
