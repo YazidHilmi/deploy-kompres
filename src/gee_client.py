@@ -75,6 +75,21 @@ def _mask_and_add_indices(image):
 
 
 def fetch_monthly_indices(kabupaten: str, period, spatial_dir: Path = SPATIAL_DIR) -> dict:
+    image, geometry, image_count, path = build_monthly_index_image(kabupaten, period, spatial_dir)
+    values = image.reduceRegion(
+        reducer=ee.Reducer.mean(), geometry=geometry, scale=10, bestEffort=True, maxPixels=1_000_000_000,
+    ).getInfo()
+    if any(values.get(key) is None for key in ("NDVI", "EVI", "SAVI")):
+        raise ValueError("GEE tidak menghasilkan nilai indeks yang lengkap setelah cloud masking.")
+    return {
+        "Kabupaten": kabupaten, "Period": pd.Period(period, freq="M"),
+        "NDVI_mean": float(values["NDVI"]), "EVI_mean": float(values["EVI"]),
+        "SAVI_mean": float(values["SAVI"]), "image_count": image_count,
+        "source": f"GEE:{SENTINEL_COLLECTION}:{path.name}", "quality_status": "valid",
+    }
+
+
+def build_monthly_index_image(kabupaten: str, period, spatial_dir: Path = SPATIAL_DIR):
     period = pd.Period(period, freq="M")
     start = period.to_timestamp().strftime("%Y-%m-%d")
     end = (period + 1).to_timestamp().strftime("%Y-%m-%d")
@@ -86,14 +101,42 @@ def fetch_monthly_indices(kabupaten: str, period, spatial_dir: Path = SPATIAL_DI
     image_count = int(collection.size().getInfo())
     if image_count == 0:
         raise ValueError(f"Tidak ada citra Sentinel-2 untuk {kabupaten} pada {period}.")
-    values = collection.median().select(["NDVI", "EVI", "SAVI"]).reduceRegion(
-        reducer=ee.Reducer.mean(), geometry=geometry, scale=10, bestEffort=True, maxPixels=1_000_000_000,
-    ).getInfo()
-    if any(values.get(key) is None for key in ("NDVI", "EVI", "SAVI")):
-        raise ValueError("GEE tidak menghasilkan nilai indeks yang lengkap setelah cloud masking.")
-    return {
-        "Kabupaten": kabupaten, "Period": period, "NDVI_mean": float(values["NDVI"]),
-        "EVI_mean": float(values["EVI"]), "SAVI_mean": float(values["SAVI"]),
-        "image_count": image_count, "source": f"GEE:{SENTINEL_COLLECTION}:{path.name}",
-        "quality_status": "valid",
+    image = collection.median().select(["NDVI", "EVI", "SAVI"]).clip(geometry)
+    return image, geometry, image_count, path
+
+
+def get_index_tile_url(kabupaten: str, period, index_name: str,
+                       spatial_dir: Path = SPATIAL_DIR) -> tuple[str, int]:
+    """Buat URL tile sementara untuk visualisasi piksel indeks dari GEE."""
+    index_name = index_name.upper()
+    if index_name not in {"NDVI", "EVI", "SAVI"}:
+        raise ValueError(f"Indeks tidak didukung: {index_name}")
+    image, _, image_count, _ = build_monthly_index_image(kabupaten, period, spatial_dir)
+    visualization = {
+        "min": -0.1, "max": 0.8,
+        "palette": ["8c510a", "d8b365", "f6e8c3", "a6dba0", "5aae61", "1b7837"],
     }
+    map_id = image.select(index_name).getMapId(visualization)
+    return map_id["tile_fetcher"].url_format, image_count
+
+
+def get_index_samples(kabupaten: str, period, index_name: str, max_points: int = 1600,
+                      spatial_dir: Path = SPATIAL_DIR) -> tuple[list[dict], int]:
+    """Ambil sampel piksel untuk fallback visual tanpa izin maps.create."""
+    index_name = index_name.upper()
+    if index_name not in {"NDVI", "EVI", "SAVI"}:
+        raise ValueError(f"Indeks tidak didukung: {index_name}")
+    image, geometry, image_count, _ = build_monthly_index_image(kabupaten, period, spatial_dir)
+    payload = image.select(index_name).sample(
+        region=geometry, scale=100, numPixels=max_points, seed=42,
+        dropNulls=True, geometries=True, tileScale=4,
+    ).getInfo()
+    samples = []
+    for feature in payload.get("features", []):
+        coordinates = feature.get("geometry", {}).get("coordinates", [])
+        value = feature.get("properties", {}).get(index_name)
+        if len(coordinates) >= 2 and value is not None:
+            samples.append({"lon": float(coordinates[0]), "lat": float(coordinates[1]), "value": float(value)})
+    if not samples:
+        raise ValueError("GEE tidak menghasilkan sampel piksel indeks pada area sawah.")
+    return samples, image_count
