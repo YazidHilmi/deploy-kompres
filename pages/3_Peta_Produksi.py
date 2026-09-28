@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib
 import json
 
 import pandas as pd
@@ -12,7 +13,6 @@ import streamlit as st
 from src.app_services import get_engine, get_secret, load_index_history
 from src.config import SPATIAL_DIR
 from src.database import list_predictions
-from src.gee_client import get_index_samples, get_index_tile_url, initialize_earth_engine
 from src.schemas import SUPPORTED_REGIONS
 from src.ui import apply_theme, format_period, page_header
 
@@ -75,18 +75,29 @@ if indicator != "Prediksi Produksi":
         else:
             try:
                 with st.spinner("Menyiapkan komposit citra dan layer peta..."):
-                    initialize_earth_engine(
+                    # GEE dimuat saat dibutuhkan agar masalah dependency atau cache
+                    # Streamlit tidak menjatuhkan seluruh halaman ketika baru dibuka.
+                    gee_client = importlib.import_module("src.gee_client")
+                    required_functions = ("initialize_earth_engine", "get_index_tile_url", "get_index_samples")
+                    if not all(hasattr(gee_client, name) for name in required_functions):
+                        gee_client = importlib.reload(gee_client)
+
+                    gee_client.initialize_earth_engine(
                         project_id=project_id, service_account=get_secret("GEE_SERVICE_ACCOUNT"),
                         private_key=get_secret("GEE_PRIVATE_KEY"),
                         service_account_json=get_secret("GEE_SERVICE_ACCOUNT_JSON"),
                     )
                     try:
-                        tile_url, image_count = get_index_tile_url(selected_region, selected_period, indicator)
+                        tile_url, image_count = gee_client.get_index_tile_url(
+                            selected_region, selected_period, indicator,
+                        )
                         layer_data = {"mode": "raster", "tile_url": tile_url}
                     except Exception as tile_error:
                         if "earthengine.maps.create" not in str(tile_error):
                             raise
-                        samples, image_count = get_index_samples(selected_region, selected_period, indicator)
+                        samples, image_count = gee_client.get_index_samples(
+                            selected_region, selected_period, indicator,
+                        )
                         layer_data = {"mode": "samples", "samples": samples}
                     st.session_state["gee_index_layer"] = {
                         "region": selected_region, "period": str(selected_period), "index": indicator,
